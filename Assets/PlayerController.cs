@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
+    private new Rigidbody2D rigidbody;
+    private Vector3 velocity;
 
     public float speed;
 
@@ -12,6 +14,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -27,11 +30,17 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 1);
 
             Vector3 direction = (Vector3.up * ver + Vector3.right * hor).normalized;
-            transform.Translate(direction * speed * Time.deltaTime);
+            velocity = direction * speed;
         }
         else
         {
             animator.SetFloat("Speed", 0);
+            velocity = Vector3.zero;
         }
+    }
+
+    void FixedUpdate()
+    {
+        rigidbody.MovePosition(transform.position + velocity * Time.fixedDeltaTime);
     }
 }
